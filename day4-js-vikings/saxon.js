@@ -1,7 +1,7 @@
 var Saxon = function () {
-    this.health = Math.floor((Math.random() * 50) + 1);
+    this.health = Math.floor((Math.random() * 100) + 10);
     this.max_health = this.health;
-    this.strength = Math.floor((Math.random() * 5) + 1);
+    this.strength = Math.floor((Math.random() * 10) + 1);
 };
 
 Saxon.prototype.attack = function(viking) {

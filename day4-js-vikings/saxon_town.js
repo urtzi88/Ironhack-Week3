@@ -28,7 +28,7 @@ var Saxon_town = function(invaders) {
                 viking.die();
             }
             console.log("Saxon: " + saxon.health);
-            console.log(viking.name + " --> Health: " + viking.health + " | Strength: " + viking.strength);
+            console.log(viking.name + " --> Health: " + viking.health + " | Strength: " + viking.strength + " | Weapon: " + viking.weapon);
             index++;
         }
     };
