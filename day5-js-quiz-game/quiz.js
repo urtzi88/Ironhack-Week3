@@ -1,10 +1,15 @@
 var read = require ('read');
-var question = require('./question.js')
+var question = require('./question.js');
+var user = require('./user.js');
+var jsonfile = require('jsonfile');
 
-var Quiz = function(questions) {
+var file = './JSON';
+
+var Quiz = function(questions, users) {
     this.questions = questions;
     this.index = 0;
     this.totalPoints = 0;
+    this.users = users;
 }
 
 Quiz.prototype.start = function() {
@@ -18,26 +23,37 @@ Quiz.prototype.askQuestion = function() {
         sentence = "BONUS_QUESTION "
     }
     var options = {
-        prompt: sentence + this.questions[this.index].text + "\n"
+        prompt: sentence + this.questions[this.index].question + "\n"
     };
     read(options, this.checkUserAnswer.bind(this));
 }
 
 Quiz.prototype.checkUserAnswer = function(err, answer) {
-    if(this.questions[this.index].answer == answer) {
-        console.log("Correct");
-        this.addPoints();
-        this.index++;
-        if(this.index < this.questions.length){
-            this.askQuestion();
+    switch (answer.toUpperCase()) {
+        case 'SAVE':
+        console.log("You pressed save!");
+        var obj = [this, ]
+        jsonfile.writeFile(file, this, function (err) {
+            console.log(err)
+        });
+        break;
+        default:
+        if(this.questions[this.index].answer.toUpperCase() == answer.toUpperCase()) {
+            console.log("Correct");
+            this.addPoints();
+            this.index++;
+            if(this.index < this.questions.length){
+                this.askQuestion();
+            } else {
+                this.showFinalScore();
+            }
         } else {
-            this.showFinalScore();
+            console.log("Incorrect");
+            this.questions[this.index].points--;
+            this.askQuestion();
         }
-    } else {
-        console.log("Incorrect");
-        this.questions[this.index].points--;
-        this.askQuestion();
     }
+
 }
 
 Quiz.prototype.addPoints = function() {
@@ -54,6 +70,4 @@ Quiz.prototype.randomBonusQ = function() {
     this.questions[random].points += 10;
 }
 
-var questionsArr = [question1, question2, question3];
-quiz1 = new Quiz(questionsArr);
-quiz1.start();
+module.exports = Quiz;
